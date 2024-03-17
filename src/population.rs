@@ -81,8 +81,8 @@ impl<'p> Population<'p> {
                 let point = rng.gen_range(0..len);
                 let p1_1 = &parent1[..point];
                 let p1_2 = &parent1[point..];
-                let p2_1 = &parent1[..point];
-                let p2_2 = &parent1[point..];
+                let p2_1 = &parent2[..point];
+                let p2_2 = &parent2[point..];
 
                 let child1 = [p1_1, p2_2].into_iter().flatten().copied().collect();
                 let child2 = [p2_1, p1_2].into_iter().flatten().copied().collect();
