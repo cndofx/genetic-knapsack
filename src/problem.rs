@@ -12,7 +12,7 @@ impl Problem {
         self.items.iter().map(|_| rng.gen()).collect()
     }
 
-    pub fn score_solution(&self, solution: &[bool]) -> (bool, u16) {
+    pub fn score_solution(&self, solution: &[bool]) -> i32 {
         assert_eq!(self.items.len(), solution.len());
 
         let (weight, value) = self.items.iter().zip(solution.iter()).fold(
@@ -26,9 +26,9 @@ impl Problem {
         );
 
         if weight > self.weight_limit {
-            (false, 0)
+            -1
         } else {
-            (true, value)
+            value as i32
         }
     }
 }
