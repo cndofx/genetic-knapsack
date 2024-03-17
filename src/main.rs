@@ -21,7 +21,7 @@ fn main() {
         weight_limit: 20,
     };
 
-    let mut population = Population::new(&problem, 100, 0.6, 0.1);
+    let mut population = Population::new(&problem, 100, 0.6, 0.1, 4);
 
     for i in 0.. {
         let best = population.best_solution();

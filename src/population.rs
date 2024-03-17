@@ -8,17 +8,25 @@ pub struct Population<'p> {
     solutions: Vec<Vec<bool>>,
     crossover_rate: f64,
     mutation_rate: f64,
+    tournament_size: usize,
 }
 
 impl<'p> Population<'p> {
     /// panics if size is not a multiple of 2
-    pub fn new(problem: &'p Problem, size: usize, crossover_rate: f64, mutation_rate: f64) -> Self {
+    pub fn new(
+        problem: &'p Problem,
+        size: usize,
+        crossover_rate: f64,
+        mutation_rate: f64,
+        tournament_size: usize,
+    ) -> Self {
         assert!(size % 2 == 0);
         Population {
             solutions: (0..size).map(|_| problem.random_solution()).collect(),
             problem,
             crossover_rate,
             mutation_rate,
+            tournament_size,
         }
     }
 
@@ -48,17 +56,12 @@ impl<'p> Population<'p> {
         let mut parents = Vec::with_capacity(len);
 
         loop {
-            let mut choose = self.solutions.choose_multiple(rng, 2);
-            let solution1 = choose.next().unwrap();
-            let solution2 = choose.next().unwrap();
-            let score1 = self.problem.score_solution(solution1);
-            let score2 = self.problem.score_solution(solution2);
-
-            if score1 >= score2 {
-                parents.push(solution1.clone());
-            } else {
-                parents.push(solution2.clone());
-            }
+            let best = self
+                .solutions
+                .choose_multiple(rng, self.tournament_size)
+                .max_by_key(|s| self.problem.score_solution(s))
+                .unwrap();
+            parents.push(best.clone());
 
             if parents.len() == len {
                 break;
